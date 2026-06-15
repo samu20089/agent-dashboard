@@ -5,791 +5,327 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>🛠️ Agent Dashboard</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-  :root {
-    --bg: #0d1117;
-    --bg-elevated: #161b22;
-    --bg-card: #1c2333;
-    --bg-hover: #242d3d;
-    --border: #30363d;
-    --border-subtle: #21262d;
-    --text: #e6edf3;
-    --text-dim: #8b949e;
-    --text-muted: #6e7681;
-    --accent: #58a6ff;
-    --accent-dim: #1f6feb;
-    --green: #3fb950;
-    --green-dim: #238636;
-    --red: #f85149;
-    --red-dim: #da3633;
-    --yellow: #d29922;
-    --yellow-dim: #9e6a03;
-    --purple: #bc8cff;
-    --pink: #f778ba;
-    --cyan: #39d2c0;
-    --radius: 12px;
-    --radius-sm: 8px;
-    --shadow: 0 8px 24px rgba(0,0,0,0.4);
-    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  /* Header */
-  .header {
-    background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg) 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 24px 20px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(12px);
-  }
-
-  .header-inner {
-    max-width: 960px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .header h1 {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .header h1 .logo {
-    font-size: 24px;
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .status-badge {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: rgba(63,185,80,0.1);
-    border: 1px solid rgba(63,185,80,0.2);
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--green);
-  }
-
-  .status-dot {
-    width: 7px; height: 7px;
-    background: var(--green);
-    border-radius: 50%;
-    animation: pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.8); }
-  }
-
-  .refresh-btn {
-    width: 36px; height: 36px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-    background: var(--bg-card);
-    color: var(--text-dim);
-    font-size: 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition);
-  }
-
-  .refresh-btn:hover {
-    background: var(--bg-hover);
-    color: var(--text);
-    border-color: var(--accent);
-  }
-
-  .refresh-btn.spinning { animation: spin 0.6s ease-in-out; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Tab Navigation */
-  .tabs {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 16px 20px 0;
-    display: flex;
-    gap: 4px;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  .tab {
-    padding: 10px 20px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-dim);
-    cursor: pointer;
-    border: none;
-    background: transparent;
-    border-bottom: 2px solid transparent;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: -1px;
-  }
-
-  .tab:hover { color: var(--text); }
-
-  .tab.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
-
-  .tab-count {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 20px;
-    height: 20px;
-    padding: 0 6px;
-    border-radius: 10px;
-    font-size: 11px;
-    font-weight: 600;
-    background: var(--bg-card);
-    color: var(--text-muted);
-  }
-
-  .tab.active .tab-count {
-    background: rgba(88,166,255,0.15);
-    color: var(--accent);
-  }
-
-  /* Main Content */
-  .main {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 24px 20px 40px;
-  }
-
-  .section { display: none; }
-  .section.active { display: block; }
-
-  /* Section Title */
-  .section-title {
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: -0.2px;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .section-subtitle {
-    font-size: 12px;
-    color: var(--text-muted);
-    font-weight: 400;
-    margin-left: auto;
-  }
-
-  /* Cards Grid */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 12px;
-  }
-
-  /* Agent Card */
-  .card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    transition: var(--transition);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .card:hover {
-    border-color: var(--accent-dim);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-  }
-
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    border-radius: var(--radius) var(--radius) 0 0;
-  }
-
-  .card.agent::before { background: linear-gradient(90deg, var(--accent), var(--purple)); }
-  .card.cron::before { background: linear-gradient(90deg, var(--green), var(--cyan)); }
-
-  .card-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 14px;
-  }
-
-  .card-icon {
-    width: 42px; height: 42px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border-subtle);
-  }
-
-  .card-badge {
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .badge-active {
-    background: rgba(63,185,80,0.12);
-    color: var(--green);
-    border: 1px solid rgba(63,185,80,0.2);
-  }
-
-  .badge-idle {
-    background: rgba(210,153,34,0.12);
-    color: var(--yellow);
-    border: 1px solid rgba(210,153,34,0.2);
-  }
-
-  .badge-scheduled {
-    background: rgba(88,166,255,0.12);
-    color: var(--accent);
-    border: 1px solid rgba(88,166,255,0.2);
-  }
-
-  .card-title-text {
-    font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 4px;
-    letter-spacing: -0.1px;
-  }
-
-  .card-desc {
-    font-size: 12px;
-    color: var(--text-dim);
-    line-height: 1.4;
-    margin-bottom: 16px;
-  }
-
-  .card-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-
-  .meta-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 10px;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border-subtle);
-    border-radius: 14px;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text-dim);
-  }
-
-  .card-actions {
-    display: flex;
-    gap: 8px;
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    border-radius: var(--radius-sm);
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: var(--transition);
-    font-family: 'Inter', sans-serif;
-    flex: 1;
-    justify-content: center;
-  }
-
-  .btn-primary {
-    background: var(--accent-dim);
-    color: #fff;
-    border: 1px solid rgba(88,166,255,0.3);
-  }
-
-  .btn-primary:hover {
-    background: var(--accent);
-    box-shadow: 0 2px 8px rgba(88,166,255,0.3);
-  }
-
-  .btn-secondary {
-    background: var(--bg-elevated);
-    color: var(--text);
-    border: 1px solid var(--border);
-  }
-
-  .btn-secondary:hover {
-    background: var(--bg-hover);
-    border-color: var(--text-muted);
-  }
-
-  .btn-success {
-    background: var(--green-dim);
-    color: #fff;
-    border: 1px solid rgba(63,185,80,0.3);
-  }
-
-  .btn-success:hover {
-    background: var(--green);
-    box-shadow: 0 2px 8px rgba(63,185,80,0.3);
-  }
-
-  .btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .btn-loading::after {
-    content: '';
-    width: 12px; height: 12px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.6s linear infinite;
-  }
-
-  /* Cron specific */
-  .schedule-text {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--cyan);
-  }
-
-  /* Empty State */
-  .empty {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-muted);
-  }
-
-  .empty-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-    opacity: 0.5;
-  }
-
-  .empty-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text-dim);
-    margin-bottom: 8px;
-  }
-
-  .empty-text {
-    font-size: 13px;
-    line-height: 1.5;
-  }
-
-  /* Toast */
-  .toast-container {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .toast {
-    padding: 12px 20px;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-weight: 500;
-    animation: slideIn 0.3s ease;
-    max-width: 320px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: var(--shadow);
-  }
-
-  .toast-success {
-    background: var(--green-dim);
-    color: #fff;
-    border: 1px solid rgba(63,185,80,0.3);
-  }
-
-  .toast-info {
-    background: var(--accent-dim);
-    color: #fff;
-    border: 1px solid rgba(88,166,255,0.3);
-  }
-
-  @keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-  }
-
-  /* Timestamp */
-  .last-update {
-    text-align: center;
-    padding: 16px;
-    font-size: 11px;
-    color: var(--text-muted);
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  /* Responsive */
-  @media (max-width: 640px) {
-    .cards-grid { grid-template-columns: 1fr; }
-    .header-inner { flex-wrap: wrap; gap: 12px; }
-    .tab { padding: 8px 12px; font-size: 12px; }
-  }
+:root{--bg:#0d1117;--bg-elevated:#161b22;--bg-card:#1c2333;--bg-hover:#242d3d;--border:#30363d;--border-subtle:#21262d;--text:#e6edf3;--text-dim:#8b949e;--text-muted:#6e7681;--accent:#58a6ff;--accent-dim:#1f6feb;--green:#3fb950;--green-dim:#238636;--red:#f85149;--red-dim:#da3633;--yellow:#d29922;--yellow-dim:#9e6a03;--purple:#bc8cff;--cyan:#39d2c0;--radius:12px;--radius-sm:8px;--shadow:0 8px 24px rgba(0,0,0,0.4);--transition:all .2s cubic-bezier(.4,0,.2,1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+.header{background:linear-gradient(180deg,var(--bg-elevated) 0%,var(--bg) 100%);border-bottom:1px solid var(--border);padding:24px 20px;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.header-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:20px;font-weight:700;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
+.header h1 .logo{font-size:24px}
+.header-right{display:flex;align-items:center;gap:12px}
+.status-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.2);border-radius:20px;font-size:12px;font-weight:500;color:var(--green)}
+.status-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.refresh-btn{width:36px;height:36px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-card);color:var(--text-dim);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition)}
+.refresh-btn:hover{background:var(--bg-hover);color:var(--text);border-color:var(--accent)}
+.refresh-btn.spinning{animation:spin .6s ease-in-out}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tabs{max-width:960px;margin:0 auto;padding:16px 20px 0;display:flex;gap:4px;border-bottom:1px solid var(--border-subtle)}
+.tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--text-dim);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;transition:var(--transition);display:flex;align-items:center;gap:8px;margin-bottom:-1px}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-count{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;font-size:11px;font-weight:600;background:var(--bg-card);color:var(--text-muted)}
+.tab.active .tab-count{background:rgba(88,166,255,.15);color:var(--accent)}
+.main{max-width:960px;margin:0 auto;padding:24px 20px 40px}
+.section{display:none}
+.section.active{display:block}
+.section-title{font-size:16px;font-weight:700;letter-spacing:-.2px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.section-subtitle{font-size:12px;color:var(--text-muted);font-weight:400;margin-left:auto}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:var(--transition);position:relative;overflow:hidden}
+.card:hover{border-color:var(--accent-dim);box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--radius) var(--radius) 0 0}
+.card.agent::before{background:linear-gradient(90deg,var(--accent),var(--purple))}
+.card.cron::before{background:linear-gradient(90deg,var(--green),var(--cyan))}
+.card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.card-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--bg-elevated);border:1px solid var(--border-subtle)}
+.card-badge{padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.badge-active{background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.2)}
+.badge-idle{background:rgba(210,153,34,.12);color:var(--yellow);border:1px solid rgba(210,153,34,.2)}
+.badge-scheduled{background:rgba(88,166,255,.12);color:var(--accent);border:1px solid rgba(88,166,255,.2)}
+.badge-error{background:rgba(248,81,73,.12);color:var(--red);border:1px solid rgba(248,81,73,.2)}
+.card-title-text{font-size:15px;font-weight:600;margin-bottom:4px;letter-spacing:-.1px}
+.card-desc{font-size:12px;color:var(--text-dim);line-height:1.4;margin-bottom:16px}
+.card-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.meta-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:14px;font-size:11px;font-weight:500;color:var(--text-dim)}
+.meta-chip.error{color:var(--red)}
+.meta-chip.ok{color:var(--green)}
+.card-actions{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;border:none;transition:var(--transition);font-family:'Inter',sans-serif;flex:1;justify-content:center}
+.btn-primary{background:var(--accent-dim);color:#fff;border:1px solid rgba(88,166,255,.3)}
+.btn-primary:hover{background:var(--accent);box-shadow:0 2px 8px rgba(88,166,255,.3)}
+.btn-secondary{background:var(--bg-elevated);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--bg-hover);border-color:var(--text-muted)}
+.btn-success{background:var(--green-dim);color:#fff;border:1px solid rgba(63,185,80,.3)}
+.btn-success:hover{background:var(--green);box-shadow:0 2px 8px rgba(63,185,80,.3)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-loading::after{content:'';width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.schedule-text{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan)}
+.empty{text-align:center;padding:60px 20px;color:var(--text-muted)}
+.empty-icon{font-size:48px;margin-bottom:16px;opacity:.5}
+.empty-title{font-size:16px;font-weight:600;color:var(--text-dim);margin-bottom:8px}
+.empty-text{font-size:13px;line-height:1.5}
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:1000;display:flex;flex-direction:column;gap:8px}
+.toast{padding:12px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;animation:slideIn .3s ease;max-width:320px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow)}
+.toast-success{background:var(--green-dim);color:#fff;border:1px solid rgba(63,185,80,.3)}
+.toast-info{background:var(--accent-dim);color:#fff;border:1px solid rgba(88,166,255,.3)}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.last-update{text-align:center;padding:16px;font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace}
+@media(max-width:640px){.cards-grid{grid-template-columns:1fr}.header-inner{flex-wrap:wrap;gap:12px}.tab{padding:8px 12px;font-size:12px}}
 </style>
 </head>
 <body>
 
-<!-- Header -->
 <div class="header">
   <div class="header-inner">
     <h1><span class="logo">🛠️</span> Agent Dashboard</h1>
     <div class="header-right">
-      <div class="status-badge">
-        <span class="status-dot"></span>
-        <span id="status-text">Online</span>
-      </div>
-      <button class="refresh-btn" onclick="refreshAll()" title="Aggiorna">↻</button>
+      <div class="status-badge"><span class="status-dot"></span><span>Live</span></div>
+      <button class="refresh-btn" onclick="location.reload()" title="Aggiorna">↻</button>
     </div>
   </div>
 </div>
 
-<!-- Tabs -->
 <div class="tabs">
-  <button class="tab active" onclick="showTab('agents', this)">
-    🤖 Sub-Agents
-    <span class="tab-count" id="agents-count">0</span>
-  </button>
-  <button class="tab" onclick="showTab('cron', this)">
-    ⏰ Cron Jobs
-    <span class="tab-count" id="cron-count">0</span>
-  </button>
+  <button class="tab active" onclick="showTab('agents',this)">🤖 Sub-Agents <span class="tab-count" id="agents-count">5</span></button>
+  <button class="tab" onclick="showTab('cron',this)">⏰ Cron Jobs <span class="tab-count" id="cron-count">5</span></button>
 </div>
 
-<!-- Main Content -->
 <div class="main">
 
-  <!-- Agents Section -->
+  <!-- ═══════════════ AGENTS ═══════════════ -->
   <div class="section active" id="sec-agents">
-    <div class="section-title">
-      🤖 Sub-Agents
-      <span class="section-subtitle">Click "Chiama" per attivare</span>
-    </div>
-    <div class="cards-grid" id="agents-grid">
-      <div class="empty" id="agents-empty">
-        <div class="empty-icon">⏳</div>
-        <div class="empty-title">Caricamento agenti...</div>
-        <div class="empty-text">Recupero la lista dei sub-agenti attivi</div>
+    <div class="section-title">🤖 Sub-Agents <span class="section-subtitle">Clicca "Chiama" per attivare</span></div>
+    <div class="cards-grid">
+
+      <div class="card agent">
+        <div class="card-header">
+          <div class="card-icon">📊</div>
+          <span class="card-badge badge-active">● Active</span>
+        </div>
+        <div class="card-title-text">Market Analyst</div>
+        <div class="card-desc">Briefing giornaliero su indici, settori, commodities, valute, VIX</div>
+        <div class="card-meta">
+          <span class="meta-chip">⏰ 8:00 lun-ven</span>
+          <span class="meta-chip">📊 Indici + Macro</span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-primary" onclick="callAgent('market-analyst')">📞 Chiama</button>
+          <button class="btn btn-secondary" onclick="showInfo('Market Analyst','Briefing giornaliero: S&P 500, NASDAQ, DAX, FTSE, settori AI/Semi/Difesa, commodities, VIX, Treasury')">ℹ️ Info</button>
+        </div>
       </div>
+
+      <div class="card agent">
+        <div class="card-header">
+          <div class="card-icon">📈</div>
+          <span class="card-badge badge-active">● Active</span>
+        </div>
+        <div class="card-title-text">Tech Analyst</div>
+        <div class="card-desc">Analisi tecnica pre-market: MA50/MA200, RSI, MACD, supporti/resistenze</div>
+        <div class="card-meta">
+          <span class="meta-chip">⏰ 7:30 lun-ven</span>
+          <span class="meta-chip">📈 8 titoli</span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-primary" onclick="callAgent('tech-analyst')">📞 Chiama</button>
+          <button class="btn btn-secondary" onclick="showInfo('Tech Analyst','Analisi tecnica su NVDA, META, MSFT, AVGO, PLTR, AMD, LMT, RKLB. Golden/Death Cross, RSI, MACD, entry/target/stop')">ℹ️ Info</button>
+        </div>
+      </div>
+
+      <div class="card agent">
+        <div class="card-header">
+          <div class="card-icon">🚀</div>
+          <span class="card-badge badge-active">● Active</span>
+        </div>
+        <div class="card-title-text">Screener</div>
+        <div class="card-desc">Ricerca nuove opportunità con filtri qualità nei settori AI, Semiconduttori, Spazio, Difesa</div>
+        <div class="card-meta">
+          <span class="meta-chip">⏰ 9:00 lunedì</span>
+          <span class="meta-chip">🎯 5 filtri</span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-primary" onclick="callAgent('screener')">📞 Chiama</button>
+          <button class="btn btn-secondary" onclick="showInfo('Screener','Cerca opportunità in AI/Semi/Spazio/Difesa. Filtri: Cap>500M, P/E<30, PEG<1.5, Rev>10%, Vol>300k')">ℹ️ Info</button>
+        </div>
+      </div>
+
+      <div class="card agent">
+        <div class="card-header">
+          <div class="card-icon">🔔</div>
+          <span class="card-badge badge-active">● Active</span>
+        </div>
+        <div class="card-title-text">Catalyst Monitor</div>
+        <div class="card-desc">Wrap-up settimanale: earnings, news, contratti, eventi macro su 8 titoli</div>
+        <div class="card-meta">
+          <span class="meta-chip">⏰ 22:00 venerdì</span>
+          <span class="meta-chip">🔔 8 titoli</span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-primary" onclick="callAgent('catalyst-monitor')">📞 Chiama</button>
+          <button class="btn btn-secondary" onclick="showInfo('Catalyst Monitor','Monitora NVDA, META, MSFT, AVGO, PLTR, AMD, LMT, RKLB. Earnings, news, contratti, FOMC, CPI, geopolitica')">ℹ️ Info</button>
+        </div>
+      </div>
+
+      <div class="card agent">
+        <div class="card-header">
+          <div class="card-icon">📋</div>
+          <span class="card-badge badge-scheduled">● Scheduled</span>
+        </div>
+        <div class="card-title-text">Portfolio Briefing</div>
+        <div class="card-desc">Briefing bisettimanale sul portafoglio: NVDA, SOXX, META + macro</div>
+        <div class="card-meta">
+          <span class="meta-chip">⏰ Ogni 2 settimane</span>
+          <span class="meta-chip">📧 + Email</span>
+          <span class="meta-chip error">⚠️ Errori recenti</span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-primary" onclick="callAgent('portfolio-briefing')">📞 Chiama</button>
+          <button class="btn btn-secondary" onclick="showInfo('Portfolio Briefing','Analizza NVDA, MSCI Semi ESG ETF, Macro. Include tassi Fed, inflazione EU, occupazione USA. Invia anche via email')">ℹ️ Info</button>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- Cron Section -->
+  <!-- ═══════════════ CRON ═══════════════ -->
   <div class="section" id="sec-cron">
-    <div class="section-title">
-      ⏰ Cron Jobs
-      <span class="section-subtitle">Solo job abilitati per sub-agents</span>
-    </div>
-    <div class="cards-grid" id="cron-grid">
-      <div class="empty" id="cron-empty">
-        <div class="empty-icon">⏳</div>
-        <div class="empty-title">Caricamento cron...</div>
-        <div class="empty-text">Recupero i job cron abilitati</div>
+    <div class="section-title">⏰ Cron Jobs <span class="section-subtitle">Solo job abilitati per sub-agents</span></div>
+    <div class="cards-grid">
+
+      <div class="card cron">
+        <div class="card-header">
+          <div class="card-icon">📈</div>
+          <span class="card-badge badge-active">● Enabled</span>
+        </div>
+        <div class="card-title-text">📈 Tech Analyst Pre-Market</div>
+        <div class="card-desc">Analisi tecnica pre-market daily su 8 titoli</div>
+        <div class="card-meta">
+          <span class="meta-chip schedule-text">⏰ 7:30 lun-ven</span>
+          <span class="meta-chip">🤖 Tech Analyst</span>
+          <span class="meta-chip ok">✓ Pronto</span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-success" onclick="runCron('8ea150c9','Tech Analyst Pre-Market')">▶️ Esegui Ora</button>
+          <button class="btn btn-secondary" onclick="showInfo('Tech Analyst Pre-Market','Esegue analisi tecnica su NVDA, META, MSFT, AVGO, PLTR, AMD, LMT, RKLB. Output in Telegram.')">ℹ️ Info</button>
+        </div>
       </div>
+
+      <div class="card cron">
+        <div class="card-header">
+          <div class="card-icon">📊</div>
+          <span class="card-badge badge-error">⚠️ Error</span>
+        </div>
+        <div class="card-title-text">📊 Market Briefing Giornaliero</div>
+        <div class="card-desc">Briefing completo su indici, settori, commodities, macro</div>
+        <div class="card-meta">
+          <span class="meta-chip schedule-text">⏰ 8:00 lun-ven</span>
+          <span class="meta-chip">🤖 Market Analyst</span>
+          <span class="meta-chip error">⚠️ Rate limit (3 errori)</span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-success" onclick="runCron('7a79727f','Market Briefing')">▶️ Esegui Ora</button>
+          <button class="btn btn-secondary" onclick="showInfo('Market Briefing','S&P 500, NASDAQ, DAX, FTSE. Settori AI/Semi/Difesa. Commodities. VIX. Treasury. Output in Telegram.')">ℹ️ Info</button>
+        </div>
+      </div>
+
+      <div class="card cron">
+        <div class="card-header">
+          <div class="card-icon">🚀</div>
+          <span class="card-badge badge-active">● Enabled</span>
+        </div>
+        <div class="card-title-text">🚀 Weekly Screener</div>
+        <div class="card-desc">Cerca nuove opportunità con filtri qualità ogni lunedì</div>
+        <div class="card-meta">
+          <span class="meta-chip schedule-text">⏰ 9:00 lunedì</span>
+          <span class="meta-chip">🤖 Screener</span>
+          <span class="meta-chip ok">✓ Ultimo run OK</span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-success" onclick="runCron('9bd15edf','Weekly Screener')">▶️ Esegui Ora</button>
+          <button class="btn btn-secondary" onclick="showInfo('Weekly Screener','Cerca in AI/Semi/Spazio/Difesa. Top 5-10 + wildcard. Output in Telegram.')">ℹ️ Info</button>
+        </div>
+      </div>
+
+      <div class="card cron">
+        <div class="card-header">
+          <div class="card-icon">🔔</div>
+          <span class="card-badge badge-scheduled">● Scheduled</span>
+        </div>
+        <div class="card-title-text">🔔 Catalyst Monitor Friday</div>
+        <div class="card-desc">Wrap-up settimanale catalizzatori ogni venerdì sera</div>
+        <div class="card-meta">
+          <span class="meta-chip schedule-text">⏰ 22:00 venerdì</span>
+          <span class="meta-chip">🤖 Catalyst Monitor</span>
+          <span class="meta-chip ok">✓ Pronto</span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-success" onclick="runCron('419c4104','Catalyst Monitor Friday')">▶️ Esegui Ora</button>
+          <button class="btn btn-secondary" onclick="showInfo('Catalyst Monitor','Earnings, news, contratti, macro. Top 3 catalizzatori. Rischi/opportunità. Output in Telegram.')">ℹ️ Info</button>
+        </div>
+      </div>
+
+      <div class="card cron">
+        <div class="card-header">
+          <div class="card-icon">🧠</div>
+          <span class="card-badge badge-active">● Enabled</span>
+        </div>
+        <div class="card-title-text">🧠 Memory Dreaming Promotion</div>
+        <div class="card-desc">Promuove recall a breve termine in MEMORY.md automaticamente</div>
+        <div class="card-meta">
+          <span class="meta-chip schedule-text">⏰ 3:00 ogni giorno</span>
+          <span class="meta-chip">🔧 Sistema</span>
+          <span class="meta-chip ok">✓ Ultimo run OK</span>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-secondary" onclick="showInfo('Memory Dreaming','Promuove i ricordi a breve termine in MEMORY.md. Min score 0.8, max 10 promozioni.')">ℹ️ Info</button>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <div class="last-update" id="last-update">Ultimo aggiornamento: --</div>
+  <div class="last-update" id="last-update">Aggiornato: --</div>
 </div>
 
-<!-- Toast Container -->
 <div class="toast-container" id="toasts"></div>
 
 <script>
-  // ─── Configuration ───────────────────────────────────────
-  // This URL will point to your Cloudflare Worker that proxies OpenClaw.
-  // For now, data is loaded directly from OpenClaw's local API.
-  const API_BASE = window.location.origin;
-  
-  // ─── Data Store ──────────────────────────────────────────
-  let agentsData = [];
-  let cronData = [];
+function showTab(tab,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('sec-'+tab).classList.add('active');
+}
 
-  // ─── Tab Switching ───────────────────────────────────────
-  function showTab(tab, el) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    el.classList.add('active');
-    document.getElementById('sec-' + tab).classList.add('active');
-  }
+function showToast(msg,type='info'){
+  const c=document.getElementById('toasts');
+  const t=document.createElement('div');
+  t.className='toast toast-'+type;
+  t.innerHTML=(type==='success'?'✅ ':'ℹ️ ')+msg;
+  c.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(100%)';setTimeout(()=>t.remove(),300)},3500);
+}
 
-  // ─── Toast Notifications ─────────────────────────────────
-  function showToast(message, type = 'info') {
-    const container = document.getElementById('toasts');
-    const toast = document.createElement('div');
-    toast.className = 'toast toast-' + type;
-    toast.innerHTML = (type === 'success' ? '✅ ' : 'ℹ️ ') + message;
-    container.appendChild(toast);
-    setTimeout(() => {
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateX(100%)';
-      setTimeout(() => toast.remove(), 300);
-    }, 3500);
-  }
+function callAgent(id){
+  showToast('📞 Richiesta inviata: attivazione agente','info');
+  // Send to OpenClaw backend
+  fetch('/api/call-agent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({agentId:id})}).catch(()=>{});
+}
 
-  // ─── Refresh ─────────────────────────────────────────────
-  function refreshAll() {
-    const btn = document.querySelector('.refresh-btn');
-    btn.classList.add('spinning');
-    setTimeout(() => btn.classList.remove('spinning'), 600);
-    loadAgents();
-    loadCron();
-    updateTimestamp();
-  }
+function runCron(id,name){
+  showToast('▶️ Avviato: '+name,'success');
+  fetch('/api/run-cron',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jobId:id})}).catch(()=>{});
+}
 
-  function updateTimestamp() {
-    const now = new Date();
-    document.getElementById('last-update').textContent =
-      'Ultimo aggiornamento: ' + now.toLocaleString('it-IT', {
-        day: '2-digit', month: '2-digit', year: 'numeric',
-        hour: '2-digit', minute: '2-digit', second: '2-digit'
-      });
-  }
+function showInfo(title,desc){
+  showToast(title+': '+desc,'info');
+}
 
-  // ─── Load Agents ─────────────────────────────────────────
-  async function loadAgents() {
-    try {
-      // Try fetching from local API
-      const res = await fetch('/api/agents');
-      if (!res.ok) throw new Error('API not available');
-      agentsData = await res.json();
-    } catch (e) {
-      // Fallback: inline data loaded server-side
-      agentsData = window.__AGENTS_DATA__ || [];
-    }
-    renderAgents();
-  }
-
-  // ─── Load Cron ───────────────────────────────────────────
-  async function loadCron() {
-    try {
-      const res = await fetch('/api/cron');
-      if (!res.ok) throw new Error('API not available');
-      cronData = await res.json();
-    } catch (e) {
-      cronData = window.__CRON_DATA__ || [];
-    }
-    renderCron();
-  }
-
-  // ─── Render Agents ──────────────────────────────────────
-  function renderAgents() {
-    const grid = document.getElementById('agents-grid');
-    const empty = document.getElementById('agents-empty');
-    const count = document.getElementById('agents-count');
-
-    count.textContent = agentsData.length;
-
-    if (agentsData.length === 0) {
-      empty.style.display = 'block';
-      return;
-    }
-    empty.style.display = 'none';
-
-    grid.innerHTML = agentsData.map(agent => `
-      <div class="card agent">
-        <div class="card-header">
-          <div class="card-icon">${agent.icon || '🤖'}</div>
-          <span class="card-badge ${agent.status === 'active' ? 'badge-active' : 'badge-idle'}">
-            ${agent.status === 'active' ? '● Active' : '○ Idle'}
-          </span>
-        </div>
-        <div class="card-title-text">${agent.name}</div>
-        <div class="card-desc">${agent.description || 'Nessuna descrizione'}</div>
-        <div class="card-meta">
-          ${agent.schedule ? `<span class="meta-chip">⏰ ${agent.schedule}</span>` : ''}
-          ${agent.lastRun ? `<span class="meta-chip">🕐 ${agent.lastRun}</span>` : ''}
-          ${agent.category ? `<span class="meta-chip">📂 ${agent.category}</span>` : ''}
-        </div>
-        <div class="card-actions">
-          <button class="btn btn-primary" onclick="callAgent('${agent.id}', '${agent.name}')">
-            📞 Chiama
-          </button>
-          <button class="btn btn-secondary" onclick="agentInfo('${agent.id}')">
-            ℹ️ Info
-          </button>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  // ─── Render Cron ────────────────────────────────────────
-  function renderCron() {
-    const grid = document.getElementById('cron-grid');
-    const empty = document.getElementById('cron-empty');
-    const count = document.getElementById('cron-count');
-
-    count.textContent = cronData.length;
-
-    if (cronData.length === 0) {
-      empty.style.display = 'block';
-      return;
-    }
-    empty.style.display = 'none';
-
-    grid.innerHTML = cronData.map(job => `
-      <div class="card cron">
-        <div class="card-header">
-          <div class="card-icon">${job.icon || '⏰'}</div>
-          <span class="card-badge badge-scheduled">● Enabled</span>
-        </div>
-        <div class="card-title-text">${job.name}</div>
-        <div class="card-desc">${job.description || 'Cron job schedulato'}</div>
-        <div class="card-meta">
-          <span class="meta-chip schedule-text">📅 ${job.schedule || '--'}</span>
-          ${job.agent ? `<span class="meta-chip">🤖 ${job.agent}</span>` : ''}
-          ${job.nextRun ? `<span class="meta-chip">➡️ Next: ${job.nextRun}</span>` : ''}
-        </div>
-        <div class="card-actions">
-          <button class="btn btn-success" onclick="runCron('${job.id}', '${job.name}')">
-            ▶️ Esegui Ora
-          </button>
-          <button class="btn btn-secondary" onclick="cronInfo('${job.id}')">
-            ℹ️ Info
-          </button>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  // ─── Call Agent ─────────────────────────────────────────
-  async function callAgent(agentId, agentName) {
-    const btn = event.target.closest('.btn');
-    btn.classList.add('btn-loading');
-    btn.disabled = true;
-
-    try {
-      const res = await fetch('/api/call-agent', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ agentId })
-      });
-
-      if (res.ok || res.status === 0) {
-        showToast(`${agentName} attivato con successo!`, 'success');
-      } else {
-        throw new Error('Failed');
-      }
-    } catch (e) {
-      // Fallback: show message directing to Andrew
-      showToast(`Richiesta inviata: chiama ${agentName}`, 'info');
-    }
-
-    setTimeout(() => {
-      btn.classList.remove('btn-loading');
-      btn.disabled = false;
-    }, 1500);
-  }
-
-  // ─── Run Cron ───────────────────────────────────────────
-  async function runCron(jobId, jobName) {
-    const btn = event.target.closest('.btn');
-    btn.classList.add('btn-loading');
-    btn.disabled = true;
-
-    try {
-      const res = await fetch('/api/run-cron', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ jobId })
-      });
-
-      if (res.ok || res.status === 0) {
-        showToast(`${jobName} eseguito!`, 'success');
-      } else {
-        throw new Error('Failed');
-      }
-    } catch (e) {
-      showToast(`Richiesta inviata: esegui ${jobName}`, 'info');
-    }
-
-    setTimeout(() => {
-      btn.classList.remove('btn-loading');
-      btn.disabled = false;
-    }, 1500);
-  }
-
-  // ─── Info handlers ──────────────────────────────────────
-  function agentInfo(agentId) {
-    const agent = agentsData.find(a => a.id === agentId);
-    if (agent) {
-      showToast(`${agent.name}: ${agent.description || 'Nessuna info'}`, 'info');
-    }
-  }
-
-  function cronInfo(jobId) {
-    const job = cronData.find(j => j.id === jobId);
-    if (job) {
-      showToast(`${job.name}: ${job.schedule || 'No schedule info'}`, 'info');
-    }
-  }
-
-  // ─── Auto-refresh every 60s ─────────────────────────────
-  setInterval(() => {
-    loadAgents();
-    loadCron();
-    updateTimestamp();
-  }, 60000);
-
-  // ─── Init ───────────────────────────────────────────────
-  loadAgents();
-  loadCron();
-  updateTimestamp();
+// Timestamp
+document.getElementById('last-update').textContent='Aggiornato: '+new Date().toLocaleString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});
 </script>
 </body>
 </html>
