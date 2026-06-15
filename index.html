@@ -242,6 +242,11 @@ function showToast(msg,type){
 }
 
 function openBotChat(cmd){
+  // Copy command to clipboard for easy paste
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(cmd).catch(function(){});
+  }
+  // Try to open Telegram app
   var tgUrl='tg://resolve?domain=AndrewClaww_Bot&text='+encodeURIComponent(cmd);
   var webUrl='https://t.me/AndrewClaww_Bot?text='+encodeURIComponent(cmd);
   window.location.href=tgUrl;
