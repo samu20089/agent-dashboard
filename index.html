@@ -310,14 +310,17 @@ function showToast(msg,type='info'){
 }
 
 function callAgent(id){
-  showToast('📞 Richiesta inviata: attivazione agente','info');
-  // Send to OpenClaw backend
-  fetch('/api/call-agent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({agentId:id})}).catch(()=>{});
+  var cmd = 'Fai il report ' + id;
+  var url = 'https://t.me/brasiliane?text=' + encodeURIComponent(cmd);
+  window.open(url, '_blank');
+  showToast('📞 Apri chat Telegram con il comando pronto', 'info');
 }
 
 function runCron(id,name){
-  showToast('▶️ Avviato: '+name,'success');
-  fetch('/api/run-cron',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jobId:id})}).catch(()=>{});
+  var cmd = 'Esegui ora ' + name;
+  var url = 'https://t.me/brasiliane?text=' + encodeURIComponent(cmd);
+  window.open(url, '_blank');
+  showToast('▶️ Apri chat Telegram per eseguire ' + name, 'success');
 }
 
 function showInfo(title,desc){
