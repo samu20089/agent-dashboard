@@ -114,6 +114,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         </div>
         <div class="card-actions">
           <button class="btn btn-primary" onclick="callAgent('market-analyst')">📞 Chiama</button>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:4px">→ Fai il report market-analyst</div>
           <button class="btn btn-secondary" onclick="showInfo('Market Analyst','Briefing giornaliero: S&P 500, NASDAQ, DAX, FTSE, settori AI/Semi/Difesa, commodities, VIX, Treasury')">ℹ️ Info</button>
         </div>
       </div>
@@ -131,6 +132,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         </div>
         <div class="card-actions">
           <button class="btn btn-primary" onclick="callAgent('tech-analyst')">📞 Chiama</button>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:4px">→ Fai il report tech-analyst</div>
           <button class="btn btn-secondary" onclick="showInfo('Tech Analyst','Analisi tecnica su NVDA, META, MSFT, AVGO, PLTR, AMD, LMT, RKLB. Golden/Death Cross, RSI, MACD, entry/target/stop')">ℹ️ Info</button>
         </div>
       </div>
@@ -148,6 +150,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         </div>
         <div class="card-actions">
           <button class="btn btn-primary" onclick="callAgent('screener')">📞 Chiama</button>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:4px">→ Fai il report screener</div>
           <button class="btn btn-secondary" onclick="showInfo('Screener','Cerca opportunità in AI/Semi/Spazio/Difesa. Filtri: Cap>500M, P/E<30, PEG<1.5, Rev>10%, Vol>300k')">ℹ️ Info</button>
         </div>
       </div>
@@ -165,6 +168,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         </div>
         <div class="card-actions">
           <button class="btn btn-primary" onclick="callAgent('catalyst-monitor')">📞 Chiama</button>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:4px">→ Fai il report catalyst-monitor</div>
           <button class="btn btn-secondary" onclick="showInfo('Catalyst Monitor','Monitora NVDA, META, MSFT, AVGO, PLTR, AMD, LMT, RKLB. Earnings, news, contratti, FOMC, CPI, geopolitica')">ℹ️ Info</button>
         </div>
       </div>
@@ -183,6 +187,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         </div>
         <div class="card-actions">
           <button class="btn btn-primary" onclick="callAgent('portfolio-briefing')">📞 Chiama</button>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:4px">→ Fai il report portfolio-briefing</div>
           <button class="btn btn-secondary" onclick="showInfo('Portfolio Briefing','Analizza NVDA, MSCI Semi ESG ETF, Macro. Include tassi Fed, inflazione EU, occupazione USA. Invia anche via email')">ℹ️ Info</button>
         </div>
       </div>
@@ -311,16 +316,35 @@ function showToast(msg,type='info'){
 
 function callAgent(id){
   var cmd = 'Fai il report ' + id;
-  var url = 'https://t.me/brasiliane?text=' + encodeURIComponent(cmd);
-  window.open(url, '_blank');
-  showToast('📞 Apri chat Telegram con il comando pronto', 'info');
+  copyToClipboard(cmd);
+  showToast('📋 Comando copiato! Incolla in Telegram: ' + cmd, 'success');
 }
 
 function runCron(id,name){
   var cmd = 'Esegui ora ' + name;
-  var url = 'https://t.me/brasiliane?text=' + encodeURIComponent(cmd);
-  window.open(url, '_blank');
-  showToast('▶️ Apri chat Telegram per eseguire ' + name, 'success');
+  copyToClipboard(cmd);
+  showToast('📋 Comando copiato! Incolla in Telegram: ' + cmd, 'success');
+}
+
+function copyToClipboard(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).catch(function(){
+      fallbackCopy(text);
+    });
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text){
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.left = '-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
 }
 
 function showInfo(title,desc){
