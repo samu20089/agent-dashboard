@@ -99,6 +99,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         <div class="card-meta"><span class="meta-chip">⏰ 8:00 lun-ven</span><span class="meta-chip">📊 Indici + Macro</span></div>
         <div class="card-actions">
           <button class="btn btn-primary" onclick="callAgent('market-analyst')">📞 Chiama</button>
+          <button class="btn btn-secondary" onclick="copyAgentCmd('market-analyst')">📋 Copia</button>
           <button class="btn btn-secondary" onclick="showInfo('Market Analyst','Briefing giornaliero: S&P 500, NASDAQ, DAX, FTSE, settori AI/Semi/Difesa, commodities, VIX, Treasury')">ℹ️ Info</button>
         </div>
       </div>
@@ -110,6 +111,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         <div class="card-meta"><span class="meta-chip">⏰ 7:30 lun-ven</span><span class="meta-chip">📈 8 titoli</span></div>
         <div class="card-actions">
           <button class="btn btn-primary" onclick="callAgent('tech-analyst')">📞 Chiama</button>
+          <button class="btn btn-secondary" onclick="copyAgentCmd('tech-analyst')">📋 Copia</button>
           <button class="btn btn-secondary" onclick="showInfo('Tech Analyst','Analisi tecnica su NVDA, META, MSFT, AVGO, PLTR, AMD, LMT, RKLB. Golden/Death Cross, RSI, MACD, entry/target/stop')">ℹ️ Info</button>
         </div>
       </div>
@@ -121,6 +123,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         <div class="card-meta"><span class="meta-chip">⏰ 9:00 lunedì</span><span class="meta-chip">🎯 5 filtri</span></div>
         <div class="card-actions">
           <button class="btn btn-primary" onclick="callAgent('screener')">📞 Chiama</button>
+          <button class="btn btn-secondary" onclick="copyAgentCmd('screener')">📋 Copia</button>
           <button class="btn btn-secondary" onclick="showInfo('Screener','Cerca opportunità in AI/Semi/Spazio/Difesa. Filtri: Cap>500M, P/E<30, PEG<1.5, Rev>10%, Vol>300k')">ℹ️ Info</button>
         </div>
       </div>
@@ -132,6 +135,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         <div class="card-meta"><span class="meta-chip">⏰ 22:00 venerdì</span><span class="meta-chip">🔔 8 titoli</span></div>
         <div class="card-actions">
           <button class="btn btn-primary" onclick="callAgent('catalyst-monitor')">📞 Chiama</button>
+          <button class="btn btn-secondary" onclick="copyAgentCmd('catalyst-monitor')">📋 Copia</button>
           <button class="btn btn-secondary" onclick="showInfo('Catalyst Monitor','Monitora NVDA, META, MSFT, AVGO, PLTR, AMD, LMT, RKLB. Earnings, news, contratti, FOMC, CPI, geopolitica')">ℹ️ Info</button>
         </div>
       </div>
@@ -143,6 +147,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         <div class="card-meta"><span class="meta-chip">⏰ Ogni 2 settimane</span><span class="meta-chip">📧 + Email</span><span class="meta-chip error">⚠️ Errori recenti</span></div>
         <div class="card-actions">
           <button class="btn btn-primary" onclick="callAgent('portfolio-briefing')">📞 Chiama</button>
+          <button class="btn btn-secondary" onclick="copyAgentCmd('portfolio-briefing')">📋 Copia</button>
           <button class="btn btn-secondary" onclick="showInfo('Portfolio Briefing','Analizza NVDA, MSCI Semi ESG ETF, Macro. Include tassi Fed, inflazione EU, occupazione USA. Invia anche via email')">ℹ️ Info</button>
         </div>
       </div>
@@ -162,6 +167,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         <div class="card-meta"><span class="meta-chip schedule-text">⏰ 7:30 lun-ven</span><span class="meta-chip">🤖 Tech Analyst</span><span class="meta-chip ok">✓ Pronto</span></div>
         <div class="card-actions">
           <button class="btn btn-success" onclick="runCron('8ea150c9-beb6-44aa-b9b9-9d7a7a2bd594','Tech Analyst Pre-Market')">▶️ Esegui Ora</button>
+          <button class="btn btn-secondary" onclick="copyCronCmd('Tech Analyst Pre-Market')">📋 Copia</button>
           <button class="btn btn-secondary" onclick="showInfo('Tech Analyst Pre-Market','Esegue analisi tecnica su NVDA, META, MSFT, AVGO, PLTR, AMD, LMT, RKLB. Output in Telegram.')">ℹ️ Info</button>
         </div>
       </div>
@@ -173,6 +179,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         <div class="card-meta"><span class="meta-chip schedule-text">⏰ 8:00 lun-ven</span><span class="meta-chip">🤖 Market Analyst</span><span class="meta-chip error">⚠️ Rate limit (3 errori)</span></div>
         <div class="card-actions">
           <button class="btn btn-success" onclick="runCron('7a79727f-3adf-4967-a969-f8e23f343c66','Market Briefing')">▶️ Esegui Ora</button>
+          <button class="btn btn-secondary" onclick="copyCronCmd('Market Briefing')">📋 Copia</button>
           <button class="btn btn-secondary" onclick="showInfo('Market Briefing','S&P 500, NASDAQ, DAX, FTSE. Settori AI/Semi/Difesa. Commodities. VIX. Treasury. Output in Telegram.')">ℹ️ Info</button>
         </div>
       </div>
@@ -184,6 +191,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         <div class="card-meta"><span class="meta-chip schedule-text">⏰ 9:00 lunedì</span><span class="meta-chip">🤖 Screener</span><span class="meta-chip ok">✓ Ultimo run OK</span></div>
         <div class="card-actions">
           <button class="btn btn-success" onclick="runCron('9bd15edf-0124-48d7-8af7-e939e221d67d','Weekly Screener')">▶️ Esegui Ora</button>
+          <button class="btn btn-secondary" onclick="copyCronCmd('Weekly Screener')">📋 Copia</button>
           <button class="btn btn-secondary" onclick="showInfo('Weekly Screener','Cerca in AI/Semi/Spazio/Difesa. Top 5-10 + wildcard. Output in Telegram.')">ℹ️ Info</button>
         </div>
       </div>
@@ -195,6 +203,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         <div class="card-meta"><span class="meta-chip schedule-text">⏰ 22:00 venerdì</span><span class="meta-chip">🤖 Catalyst Monitor</span><span class="meta-chip ok">✓ Pronto</span></div>
         <div class="card-actions">
           <button class="btn btn-success" onclick="runCron('419c4104-d532-4a78-91f2-8e3acbda07d5','Catalyst Monitor Friday')">▶️ Esegui Ora</button>
+          <button class="btn btn-secondary" onclick="copyCronCmd('Catalyst Monitor Friday')">📋 Copia</button>
           <button class="btn btn-secondary" onclick="showInfo('Catalyst Monitor','Earnings, news, contratti, macro. Top 3 catalizzatori. Rischi/opportunità. Output in Telegram.')">ℹ️ Info</button>
         </div>
       </div>
@@ -241,27 +250,41 @@ function showToast(msg,type){
   },3500);
 }
 
-function copyTextToClipboard(text){
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).catch(function(){ fallbackCopy(text); });
-  } else {
-    fallbackCopy(text);
-  }
-}
-function fallbackCopy(text){
+function syncCopyText(text){
   try{
     var ta=document.createElement('textarea');
     ta.value=text;
-    ta.style.cssText='position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
+    ta.style.cssText='position:fixed;top:0;left:0;opacity:0;z-index:-999;';
+    ta.readOnly=true;
     document.body.appendChild(ta);
     ta.focus();
     ta.select();
-    document.execCommand('copy');
+    var ok=document.execCommand('copy');
     document.body.removeChild(ta);
-  }catch(e){}
+    return ok;
+  }catch(e){return false;}
+}
+function asyncCopyText(text){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    return navigator.clipboard.writeText(text).then(function(){return true;}).catch(function(){return syncCopyText(text);});
+  }
+  return Promise.resolve(syncCopyText(text));
+}
+function copyAgentCmd(id){
+  var cmd='Fai il report '+id;
+  asyncCopyText(cmd).then(function(ok){
+    if(ok) showToast('📋 Copiato: '+cmd,'success');
+    else showToast('❌ Copia fallita, seleziona e copia manualmente','info');
+  });
+}
+function copyCronCmd(name){
+  var cmd='Esegui ora '+name;
+  asyncCopyText(cmd).then(function(ok){
+    if(ok) showToast('📋 Copiato: '+cmd,'success');
+    else showToast('❌ Copia fallima, seleziona e copia manualmente','info');
+  });
 }
 function openBotChat(cmd){
-  copyTextToClipboard(cmd);
   var tgUrl='tg://resolve?domain=AndrewClaww_Bot&text='+encodeURIComponent(cmd);
   var webUrl='https://t.me/AndrewClaww_Bot?text='+encodeURIComponent(cmd);
   window.location.href=tgUrl;
